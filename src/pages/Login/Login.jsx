@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import img from "../../assets/images/login/login.svg"
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
+import axios from "axios";
 
 const Login = () => {
 
@@ -18,9 +19,17 @@ const Login = () => {
 
         signIn(email,password)
         .then(result=>{
-            const user = result.user;
-            console.log(user);
-            navigate(location?.state ? location.state : '/');
+            const loggedInUser = result.user;
+            console.log(loggedInUser);
+            const user = {email};
+            // navigate(location?.state ? location.state : '/');
+
+            // get access token
+            axios.post('http://localhost:5000/jwt',user)
+            .then(res=>{
+                console.log(res.data);  //axios er khetre res k json a covert kora lage na 
+            })
+
         })
         .catch(error=>{
             console.error(error);
