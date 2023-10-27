@@ -6,35 +6,37 @@ import axios from "axios";
 
 const Login = () => {
 
-    const {signIn} = useContext(AuthContext);
+    const { signIn } = useContext(AuthContext);
     const location = useLocation();
     // console.log(location);
     const navigate = useNavigate()
 
-    const handleLogin = e =>{
+    const handleLogin = e => {
         e.preventDefault();
         const form = e.target;
         const email = form.email.value;
         const password = form.password.value;
 
-        signIn(email,password)
-        .then(result=>{
-            const loggedInUser = result.user;
-            console.log(loggedInUser);
-            const user = {email};
-            // navigate(location?.state ? location.state : '/');
+        signIn(email, password)
+            .then(result => {
+                const loggedInUser = result.user;
+                console.log(loggedInUser);
+                const user = { email };
 
-            // get access token
-            axios.post('http://localhost:5000/jwt',user)
-            .then(res=>{
-                console.log(res.data);  //axios er khetre res k json a covert kora lage na 
+                // get access token
+                axios.post('http://localhost:5000/jwt', user, { withCredentials: true })
+                    .then(res => {
+                        console.log(res.data);  //axios er khetre res k json a covert kora lage na 
+                        if(res.data.success){
+                            navigate(location?.state ? location.state : '/');
+                        }
+                    })
+
             })
+            .catch(error => {
+                console.error(error);
 
-        })
-        .catch(error=>{
-            console.error(error);
-
-        })
+            })
     }
 
     return (
